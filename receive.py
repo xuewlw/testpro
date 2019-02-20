@@ -6,8 +6,11 @@ def parse_xml(web_data):
         return None
     xmlData = ET.fromstring(web_data)
     msg_type = xmlData.find('MsgType').text
+    print(msg_type)
     if msg_type == 'text':
         return TextMsg(xmlData)
+    if msg_type == "image":
+        return ImageMsg(xmlData)
 
 
 class Msg(object):
@@ -17,16 +20,20 @@ class Msg(object):
         self.CreateTime = xmlData.find('CreateTime').text
         self.MsgType = xmlData.find('MsgType').text
         self.MsgId = xmlData.find('MsgId').text
+        print(self.CreateTime)
 
 
 class TextMsg(Msg):
     def __init__(self, xmlData):
         Msg.__init__(self, xmlData)
-        self.Content = xmlData.find('Content').text.encode("uft-8")
+        # self.Content = xmlData.find('Content').text.encode("uft-8")
+        self.Content = xmlData.find('Content').text
+        print(self.Content)
 
 
 class ImageMsg(Msg):
     def __init__(self, xmlData):
         Msg.__init__(self, xmlData)
         self.PicUrl = xmlData.find('PicUrl').text
-        self.MedialId = xmlData.find('MediaId').text
+        self.MediaId = xmlData.find('MediaId').text
+        print(self.MediaId)

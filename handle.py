@@ -26,9 +26,11 @@ class Handle(object):
             hashcode = hashlib.sha1(list.encode('utf8')).hexdigest()
 
             if hashcode == signature:
+                print(echostr)
                 return echostr
             else:
-                return ""
+                print("22222")
+                return "22"
         except IndexError:
             print("123")
 
@@ -38,12 +40,21 @@ class Handle(object):
             print("Handle Post webdata is ", webData)
 
             recMsg = receive.parse_xml(webData)
-            if isinstance(recMsg, receive.Msg) and recMsg.MsgType == 'text':
-                toUser = recMsg.ToUserName
-                fromUser = recMsg.FromUserName
-                content = "test"
-                replyMsg = reply.TextMsg(toUser, fromUser, content)
-                return replyMsg.send()
+            if isinstance(recMsg, receive.Msg):
+                toUser = recMsg.FromUserName
+                fromUser = recMsg.ToUserName
+                if recMsg.MsgType == 'text':
+                    content = "test"
+                    print(toUser)
+                    replyMsg = reply.TextMsg(toUser, fromUser, content)
+                    return replyMsg.send()
+                if recMsg.MsgType == "image":
+                    mediaId = recMsg.MediaId
+                    print(mediaId)
+                    replyMsg = reply.ImageMsg(toUser, fromUser, mediaId)
+                    return replyMsg.send()
+                else:
+                    return reply.Msg().send()
             else:
                 print("暂不处理")
                 return "success"
