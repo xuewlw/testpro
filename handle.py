@@ -40,9 +40,10 @@ class Handle(object):
             print("Handle Post webdata is ", webData)
 
             recMsg = receive.parse_xml(webData)
+            toUser = recMsg.FromUserName
+            fromUser = recMsg.ToUserName
+
             if isinstance(recMsg, receive.Msg):
-                toUser = recMsg.FromUserName
-                fromUser = recMsg.ToUserName
                 if recMsg.MsgType == 'text':
                     content = "test"
                     print(toUser)
@@ -53,10 +54,17 @@ class Handle(object):
                     print(mediaId)
                     replyMsg = reply.ImageMsg(toUser, fromUser, mediaId)
                     return replyMsg.send()
-                else:
-                    return reply.Msg().send()
-            else:
-                print("暂不处理")
-                return "success"
+                # else:
+                #    return reply.Msg().send()
+
+            if isinstance(recMsg, receive.EventMsg):
+                if recMsg.Event == 'CLICK':
+                    if recMsg.Eventkey == 'mpGuide':
+                        content = u"编写中".encode('utf8')
+                        replyMsg = reply.TextMsg(toUser, fromUser, content)
+                        return replyMsg.send()
+
+            print("暂不处理")
+            return reply.Msg().send()
         except Exception as e:
             return e
