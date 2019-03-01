@@ -64,7 +64,7 @@ class Handle(object):
                         replyMsg = reply.TextMsg(toUser, fromUser, content)
                         return replyMsg.send()
 
-            print("暂不处理")
+            print("暂时不处理")
             return reply.Msg().send()
         except Exception as e:
             return e
